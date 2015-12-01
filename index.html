@@ -22,8 +22,9 @@
   </div>
 
   <div id="start-btns" class="btns">
-    <div id="open-customer-btn" class="btn">我是用户</div>
+    <h3 class="item">请先启动一个客服，然后再开启用户测试。</h3>
     <div id="open-service-btn" class="btn">我是客服</div>
+    <div id="open-customer-btn" class="btn">我是用户</div>
   </div>
 
   <div id="tips" class="tips strong">你当前是
@@ -40,7 +41,14 @@
 
     <div id="service-input" class="item hide">
       <label>你的昵称：</label>
-      <input autofocus id="input-name" type="text">
+      <select id="input-name">
+        <option value="Iori">Iori</option>
+        <option value="Kyo">Kyo</option>
+        <option value="Lucy">Lucy</option>
+        <option value="Tom">Tom</option>
+        <option value="Jack">Jack</option>
+        <option value="Marry">Marry</option>
+      </select>
       <div id="service-open-btn" class="btn">等待客户接入</div>
     </div>
 
@@ -55,6 +63,9 @@
       </div>
     </div>
   </div>
+
+  <!-- 引入 LeanCloud 数据存储 SDK -->
+  <script src="./dist/av.js"></script>
 
   <!-- 引入 LeanCloud 实时通信 SDK -->
   <script src="./dist/AV.realtime.js"></script>

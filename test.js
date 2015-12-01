@@ -1,7 +1,11 @@
 // 请将 AppId 改为你自己的 AppId，否则无法本地测试
 var appId = '9sVRh5ba30yYedxYQky7VFMc';
+var appKey = '2Qp9WaPoDJe9DVwvxgH4hjzq';
 
-var clientId = 'customer';
+AV.initialize(appId, appKey);
+AV.setProduction(0);
+
+var clientId = 'service';
 var roomId = '';
 
 // 用来存储 realtimeObject
@@ -39,6 +43,12 @@ bindEvent(document.body, 'keydown', function(e) {
   }
 });
 
+function getRoom() {
+  return AV.Cloud.run('start-conv', {
+    question: 'same question'
+  });
+}
+
 function main() {
   showWall.style.display = 'block';
   var val = inputName.value;
@@ -68,9 +78,14 @@ function main() {
     switch (role) {
       case 0:
         showLog('你当前的角色是普通用户，系统正在链接服务器，匹配客服，请等待。。。');
+        joinRoom();
+        customerInput.style.display = 'none';
       break;
       case 1:
         showLog('你当前的角色是客服，请等待客户连接。。。');
+        rt.on('create', function(data) {
+          console.log(data);
+        });
       break;
     }
   });
@@ -100,20 +115,6 @@ function joinRoom() {
         // 获取成员列表
         room.list(function(data) {
           showLog('当前 Conversation 的成员列表：', data);
-
-          // 获取在线的 client（Ping 方法每次只能获取 20 个用户在线信息）
-          rt.ping(data.slice(0, 20), function(list) {
-            showLog('当前在线的成员列表：', list);
-          });
-
-          var l = data.length;
-
-          // 如果超过 500 人，就踢掉一个。
-          if (l > 490) {
-            room.remove(data[30], function() {
-              showLog('人数过多，踢掉： ', data[30]);
-            });
-          }
 
           // 获取聊天历史
           getLog(function() {
@@ -150,6 +151,10 @@ function openCustomer() {
   roleTipCustomer.style.display = 'inline-block';
   customerInput.style.display = 'block';
   role = 0;
+  getRoom().then(function(data) {
+    roomId = data.convId;
+    clientId = data.customId;
+  });
 }
 
 function openService() {
