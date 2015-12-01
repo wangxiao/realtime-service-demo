@@ -20,14 +20,14 @@ function getEle(id) {
   return document.getElementById(id);
 }
 
-function sendMsg() {
+function sendMsg(val) {
 
   // 如果没有连接过服务器
   if (firstFlag) {
     alert('请先连接服务器！');
     return;
   }
-  var val = inputSend.value;
+  val = inputSend.value || val;
 
   // 不让发送空字符
   if (!String(val).replace(/^\s+/, '').replace(/\s+$/, '')) {

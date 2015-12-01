@@ -52,7 +52,7 @@ function getRoom() {
 function main() {
   showWall.style.display = 'block';
   var val = inputName.value;
-  if (val) {
+  if (role && val) {
     clientId = val;
   }
   if (!firstFlag) {
@@ -83,8 +83,11 @@ function main() {
       break;
       case 1:
         showLog('你当前的角色是客服，请等待客户连接。。。');
-        rt.on('create', function(data) {
-          console.log(data);
+        rt.on('join', function(data) {
+          if (!roomId) {
+            roomId = data.cid;
+            joinRoom(sendMsg('你好，我是客服，有什么可以帮您？'));
+          }
         });
       break;
     }
@@ -101,7 +104,7 @@ function main() {
   });
 }
 
-function joinRoom() {
+function joinRoom(callback) {
   // 获得已有房间的实例
   rt.room(roomId, function(object) {
 
@@ -133,6 +136,10 @@ function joinRoom() {
         }
         showMsg(data);
       });
+    }
+
+    if (callback) {
+      callback();
     }
   });
 }
