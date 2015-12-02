@@ -161,6 +161,8 @@ function openCustomer() {
   getRoom().then(function(data) {
     roomId = data.convId;
     clientId = data.customId;
+  }, function(err) {
+    alert('没有空闲的客服人员，请稍后再试。');
   });
 }
 
