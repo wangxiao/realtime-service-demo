@@ -29,9 +29,18 @@ var role = 0;
 
 bindEvent(openCustomerBtn, 'click', openCustomer);
 bindEvent(openServiceBtn, 'click', openService);
-bindEvent(customerOpenBtn, 'click', main);
 bindEvent(serviceOpenBtn, 'click', main);
 bindEvent(sendBtn, 'click', sendMsg);
+bindEvent(closeBtn, 'click', close);
+bindEvent(customerOpenBtn, 'click', function() {
+  getRoom().then(function(data) {
+    roomId = data.convId;
+    clientId = data.customId;
+    main();
+  }, function(err) {
+    alert('没有空闲的客服人员，请稍后再试。');
+  });
+});
 
 bindEvent(document.body, 'keydown', function(e) {
   if (e.keyCode === 13) {
@@ -91,6 +100,12 @@ function main() {
         });
       break;
     }
+
+    // 有一方退出
+    rt.on('left', function(data) {
+      alert('对方已经结束会话。');
+      close();
+    });
   });
 
   // 监听服务情况
@@ -123,13 +138,14 @@ function joinRoom(callback) {
           getLog(function() {
             printWall.scrollTop = printWall.scrollHeight;
             showLog('已经加入，可以开始聊天。');
+
+            // 发送默认的信息
+            if (role === 1) {
+              sendMsg('你好，我是客服，有什么可以帮您？');
+            }
+
           });
         });
-
-        // 发送默认的信息
-        if (role === 1) {
-          sendMsg('你好，我是客服，有什么可以帮您？');
-        }
 
       });
 
@@ -163,12 +179,6 @@ function openCustomer() {
   roleTipCustomer.style.display = 'inline-block';
   customerInput.style.display = 'block';
   role = 0;
-  getRoom().then(function(data) {
-    roomId = data.convId;
-    clientId = data.customId;
-  }, function(err) {
-    alert('没有空闲的客服人员，请稍后再试。');
-  });
 }
 
 function openService() {
@@ -180,7 +190,10 @@ function openService() {
   role = 1;
 }
 
-
-
-
+function close() {
+  if (room) {
+    room.leave();
+  }
+  window.location.reload();
+}
 

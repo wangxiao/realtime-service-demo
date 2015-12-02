@@ -4,6 +4,7 @@ var openServiceBtn = getEle('open-service-btn');
 var customerOpenBtn = getEle('customer-open-btn');
 var serviceOpenBtn = getEle('service-open-btn');
 var sendBtn = getEle('send-btn');
+var closeBtn = getEle('close-btn');
 var inputName = getEle('input-name');
 var inputQuestion = getEle('input-question');
 var inputSend = getEle('input-send');
