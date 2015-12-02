@@ -86,7 +86,7 @@ function main() {
         rt.on('join', function(data) {
           if (!roomId) {
             roomId = data.cid;
-            joinRoom(sendMsg('你好，我是客服，有什么可以帮您？'));
+            joinRoom();
           }
         });
       break;
@@ -125,6 +125,11 @@ function joinRoom(callback) {
             showLog('已经加入，可以开始聊天。');
           });
         });
+
+        // 发送默认的信息
+        if (role === 1) {
+          sendMsg('你好，我是客服，有什么可以帮您？');
+        }
 
       });
 
